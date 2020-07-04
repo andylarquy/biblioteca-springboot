@@ -4,7 +4,7 @@ import org.eclipse.xtend.lib.annotations.Accessors
 
 @Accessors
 class Libro {
-		int id
+	int id
 	String titulo
 
 	new() {

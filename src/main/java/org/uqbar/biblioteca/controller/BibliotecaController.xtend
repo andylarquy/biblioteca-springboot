@@ -11,9 +11,26 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import org.uqbar.biblioteca.domain.Biblioteca
+import org.uqbar.biblioteca.domain.Libro
 
 @RestController
 class BibliotecaController {
+
+	/* TODO: Tuve problemas para encontrar la manera de inyectar
+	* la biblioteca en el constructor, estaría bueno así podes
+	* arrancar con libros ya cargados
+	*/
+	Biblioteca biblioteca = new Biblioteca =>[
+		
+		val libro1 = new Libro() => [
+			id = 1
+			titulo = "Juancito y los clonosaurios"
+		]
+		
+		libros.add(libro1)
+		
+	]
 
 	//Tenemos de referencia el controller de saludador
 	Saludador saludador = new Saludador()
@@ -37,17 +54,11 @@ class BibliotecaController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.message)
 		}
 	}
-
-
-/*
- *  TODO: Traducir de XTrest
- *  
- *  @Get("/libros")
- * 	def getLibros(String string) {
- *     return ok(this.biblioteca.searchLibros(string).toJson)
- * 	}
- */
  
+ @GetMapping(value="/libros/{contenido}")
+ def getLibros(@PathVariable String contenido){	
+ 	this.biblioteca.searchLibros(contenido)
+ }
  
 /*
  *  TODO: Traducir de XTrest
