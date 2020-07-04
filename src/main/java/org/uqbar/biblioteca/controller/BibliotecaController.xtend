@@ -13,26 +13,27 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import org.uqbar.biblioteca.domain.Biblioteca
 import org.uqbar.biblioteca.domain.Libro
+import org.springframework.web.bind.annotation.RequestParam
 
 @RestController
 class BibliotecaController {
 
 	/* TODO: Tuve problemas para encontrar la manera de inyectar
-	* la biblioteca en el constructor, estaría bueno así podes
-	* arrancar con libros ya cargados
-	*/
-	Biblioteca biblioteca = new Biblioteca =>[
-		
+	 * la biblioteca en el constructor, estaría bueno así podes
+	 * arrancar con libros ya cargados
+	 */
+	Biblioteca biblioteca = new Biblioteca => [
+
 		val libro1 = new Libro() => [
 			id = 1
 			titulo = "Juancito y los clonosaurios"
 		]
-		
+
 		libros.add(libro1)
-		
+
 	]
 
-	//Tenemos de referencia el controller de saludador
+	// Tenemos de referencia el controller de saludador
 	Saludador saludador = new Saludador()
 
 	@GetMapping(value="/saludoDefault")
@@ -54,31 +55,28 @@ class BibliotecaController {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.message)
 		}
 	}
- 
- @GetMapping(value="/libros/{contenido}")
- def getLibros(@PathVariable String contenido){	
- 	this.biblioteca.searchLibros(contenido)
- }
- 
-/*
- *  TODO: Traducir de XTrest
- *  
- * @Get("/libros/:id")
- *    def getLibroById() {
- *        try {
- *            var libro = this.biblioteca.getLibro(Integer.valueOf(id))
- *            if (libro === null) {
- *                return notFound(getErrorJson("No existe libro con el identificador " + id))
- *            } else {
- *                return ok(libro.toJson)
- *            }
- *        } catch (NumberFormatException exception) {
- *            return badRequest(getErrorJson("El id debe ser un número entero"))
- *        }
- *    }
- */
- 
- 
+
+	@GetMapping(value="/libros")
+	def getLibros(@RequestParam(value="contenido", required=false) String contenido) {
+		this.biblioteca.searchLibros(contenido)
+	}
+
+	@GetMapping(value="/libros/{id}")
+	def getLibroById(@PathVariable String id) {
+		try {
+			var libro = this.biblioteca.getLibro(Integer.valueOf(id))
+			
+			if (libro === null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No existe libro con el identificador " + id)
+			} else {
+				return libro
+			}
+		} catch (NumberFormatException exception) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El id debe ser un número entero")
+		}
+	}
+}
+
 /*
  *  TODO: Traducir de XTrest
  *  
@@ -92,8 +90,6 @@ class BibliotecaController {
  *        }
  *    }
  */
-
-
 /*
  *  TODO: Traducir de XTrest
  *  
@@ -112,16 +108,11 @@ class BibliotecaController {
  *        }
  *    }
  */
-
 /*
  *    private def getErrorJson(String message) {
  *        '{ "error": "' + message + '" }'
  *    }
  */
- 
- 
-}
-
 class Saludador {
 	static int ultimoId = 1
 	public static String DODAIN = "dodain"

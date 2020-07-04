@@ -31,7 +31,7 @@ class Biblioteca {
 	}
 		
 	def searchLibros(String substring) {
-		if (substring.isBlank) {
+		if (substring === null) {
 			this.libros
 		} else {
 			this.libros.filter[ it.titulo.toLowerCase.contains(substring.toLowerCase) ].toList			
